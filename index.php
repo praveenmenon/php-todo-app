@@ -2,8 +2,10 @@
     <head>
         <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="css/style.css">
-        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
         <script src="js/main.js"></script>
     </head>
     <body>
@@ -15,7 +17,7 @@
         if ($connection -> connect_error) {
             die("Database connection failed:" . $conn->connect_error);
         }
-        $sql_query = "SELECT id, description FROM task";
+        $sql_query = "SELECT * FROM task";
 	    $result = $connection->query($sql_query);
 	    $tasks = array();
         if ($result->num_rows > 0) {
@@ -44,30 +46,45 @@
         <div class="container" id="main">
             <h1>To-Do List PHP</h1>
             <form role ="form" id="main_input_box">
-                <label>
-                    <input type="text" class ="form-control" id="custom_textbox" name="Item" placeholder="What do you need to do?">
-                    <input type="submit" value="Add" class="btn btn-primary add_button">
-                </label>
+            <table class="table">
+                <tr>
+                    <td><input type="text" class ="form-control" id="custom_textbox" name="Item" placeholder="What do you need to do?" required></td>
+                    <td><input type="text" class ="form-control" id="custom_textbox" name="ttask_description" placeholder="Give a description of your task"></td>             
+                    <td><input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text" required/></td>
+                    <td><input type="submit" value="Add" class="btn btn-primary add_button"></td>
+                </tr>
+            </table>
             </form>
             <form>
-                <ol class="list-group list_of_items">
-                    <?php foreach ($tasks as $task): ?>
-                    <li class="list-group-item">
-                        <div class="text_holder">
-                            <?php echo $task['description'] ?>
-                            <div class="btn-group pull-right">
-                                <button class="delete btn btn-warning" value= "delete" onClick='location.href="?delete=<?php echo $task['id']?>"'>Delete</button>
-                                <button class="edit btn btn-success">Edit</button>
-                            </div>
-                        </div>
+              <table class="table table-dark">
+              <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Done</th>
+                <th scope="col">Ttile</th>
+                <th scope="col">Description</th>
+                <th scope="col">Action</th>
+              </tr>
+              </thead>
+                <?php foreach ($tasks as $task): ?>
+                  <tr class="list-group list_of_items">
+                      <!-- <li class="list-group-item"> -->
+                      <td><label class="completed_item"><?php echo $task['date'] ?></td>  
+                      <td>
                         <div class="checkbox">
-                            <label>
-                                <input type="checkbox" class="pull-right">
-                            </label>
+                          <label>
+                            <input type="checkbox">
+                          </label>
                         </div>
-                    </li>
-                    <?php endforeach; ?>
-                </ol>
+                      </td>
+                      <td><?php echo $task['title'] ?></td>  
+                      <td><?php echo $task['description'] ?></td>             
+                      <td><button class="delete btn btn-warning" value= "delete" onClick='location.href="?delete=<?php echo $task['id']?>"'>Delete</button>
+                      <button class="edit btn btn-success">Edit</button></td>
+                      <!-- </li> -->
+                  </tr>
+                <?php endforeach; ?>
+                </table>
             </form>
         </div>
     </body>
